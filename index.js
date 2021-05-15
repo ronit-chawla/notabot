@@ -81,16 +81,17 @@ const b99CharactersLastNames = {
 };
 
 client.on('message', async msg => {
-	if (msg.content.startsWith('!')) {
+	if (msg.author == client.user) return;
+	if (msg.content.startsWith('?')) {
 		// B99
-		if (msg.content.startsWith('!b99')) {
+		if (msg.content.startsWith('?b99')) {
 			let character = msg.content.split(' ')[2];
 			if (
 				character &&
 				(b99Characters[character] ||
 					b99CharactersLastNames[character])
 			) {
-				if (msg.content.startsWith('!b99 img')) {
+				if (msg.content.startsWith('?b99 img')) {
 					const attachment = new MessageAttachment(
 						b99Characters[character]
 							? b99Characters[character].img
@@ -100,7 +101,7 @@ client.on('message', async msg => {
 					);
 					msg.channel.send(attachment);
 				} else if (
-					msg.content.startsWith('!b99 quote')
+					msg.content.startsWith('?b99 quote')
 				) {
 					if (!b99CharactersLastNames[character])
 						character =
@@ -131,7 +132,7 @@ client.on('message', async msg => {
 				msg.reply('Invalid Character');
 			}
 		} else if (
-			msg.content.startsWith('!stranger-things')
+			msg.content.startsWith('?stranger-things')
 		) {
 			const character = msg.content.split(' ')[1];
 			try {
@@ -157,7 +158,7 @@ client.on('message', async msg => {
 				console.log(err);
 			}
 		} else {
-			if (msg.content === '!meme') {
+			if (msg.content === '?meme') {
 				try {
 					const { data } = await axios.get(
 						'https://meme-api.herokuapp.com/gimme'
@@ -173,6 +174,20 @@ client.on('message', async msg => {
 						'Error fetching meme, please try again later...'
 					);
 				}
+			} else if (msg.content === '?cmds') {
+				msg.channel.send(
+					'?cmds - list of commands'
+				);
+				msg.channel.send(
+					'?b99 img <character> -  img of character'
+				);
+				msg.channel.send(
+					'?b99 quote <character> - random quote by character'
+				);
+				msg.channel.send(
+					'?stranger-things <character> - info about character'
+				);
+				msg.channel.send('?meme - random meme');
 			}
 		}
 	} else {
